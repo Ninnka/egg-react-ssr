@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from 'mobx'
+import { action, observable } from 'mobx'
 
 const getData = async () => {
   return Promise.resolve([
@@ -25,15 +25,12 @@ class PageStore {
     @observable news = []
 
     constructor (state) {
-      this.news = (state && state.pageStore.news) || []
+      this.news = state ? state.pageStore.news : []
     }
 
-    @action
-    async getData () {
+    @action getData = async () => {
       const news = await getData()
-      runInAction(() => {
-        this.news = news
-      })
+      this.news = news
     }
 }
 

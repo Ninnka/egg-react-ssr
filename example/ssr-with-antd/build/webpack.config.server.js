@@ -8,17 +8,57 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const plugins = [
   new webpack.DefinePlugin({
-    __isBrowser__: false
+    '__isBrowser__': false //eslint-disable-line
   })
 ]
+const webpackModule = {
+  rules: [
+    {
+      oneOf: [
+        {
+          test: /\.(js|mjs|jsx|ts|tsx)$/,
+          exclude: /node_modules/,
+          loader: require.resolve('babel-loader'),
+          options: {
+            cacheDirectory: true,
+            cacheCompression: false,
+            presets: [
+              [
+                '@babel/preset-env',
+                {
+                  modules: false
+                }
+              ],
+              '@babel/preset-react'
+            ],
+            plugins: [
+              [
+                'import',
+                {
+                  libraryName: 'antd',
+                  libraryDirectory: 'lib',
+                  style: 'css'
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+
 module.exports = merge(baseConfig, {
   devtool: isDev ? 'eval-source-map' : '',
   entry: {
-    Page: paths.entry
+    Page: paths.entry,
+    Layout: paths.layout
   },
   target: 'node',
+  module: webpackModule,
   externals: nodeExternals({
-    whitelist: [/\.(css|less|sass|scss)$/, /^antd.*?css/]
+    whitelist: [/\.(css|less|sass|scss)$/, /^antd.*?css/],
+    modulesDir: paths.appNodeModules
   }),
   output: {
     path: paths.appBuild,

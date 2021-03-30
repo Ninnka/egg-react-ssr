@@ -1,13 +1,12 @@
 'use strict'
 
 const paths = require('./paths')
-const path = require('path')
 // style files regexes
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const getStyleLoaders = require('./util').getStyleLoaders
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent')
 
-let webpackModule = {
+const webpackModule = {
   strictExportPresence: true,
   rules: [
     { parser: { requireEnsure: false } },
@@ -23,17 +22,23 @@ let webpackModule = {
         },
         {
           test: /\.(js|mjs|jsx|ts|tsx)$/,
-          include: paths.appSrc,
+          exclude: /node_modules/,
           loader: require.resolve('babel-loader'),
           options: {
             cacheDirectory: true,
             cacheCompression: false,
             presets: [
+              [
+                '@babel/preset-env',
+                {
+                  modules: false
+                }
+              ],
               '@babel/preset-react'
             ],
             plugins: [
-              ['@babel/plugin-proposal-decorators', { 'legacy': true }],
-              ['@babel/plugin-proposal-class-properties', { 'loose': true }]
+              ['@babel/plugin-proposal-decorators', { legacy: true }],
+              ['@babel/plugin-proposal-class-properties', { loose: true }]
             ]
           }
         },
@@ -88,10 +93,14 @@ let webpackModule = {
 }
 
 module.exports = {
+  stats: {
+    children: false,
+    entrypoints: false
+  },
   mode: process.env.NODE_ENV,
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '../web')
+      '@': paths.appSrc
     },
     extensions: paths.moduleFileExtensions
       .map(ext => `.${ext}`)

@@ -1,13 +1,12 @@
 'use strict'
 
 const paths = require('./paths')
-const path = require('path')
 // style files regexes
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const getStyleLoaders = require('./util').getStyleLoaders
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent')
 
-let webpackModule = {
+const webpackModule = {
   strictExportPresence: true,
   rules: [
     { parser: { requireEnsure: false } },
@@ -29,12 +28,15 @@ let webpackModule = {
             cacheDirectory: true,
             cacheCompression: false,
             presets: [
+              [
+                '@babel/preset-env',
+                {
+                  modules: false
+                }
+              ],
               '@babel/preset-react'
             ],
-            plugins: [
-              '@babel/plugin-syntax-dynamic-import',
-              '@babel/plugin-proposal-class-properties'
-            ]
+            plugins: []
           }
         },
         {
@@ -88,10 +90,14 @@ let webpackModule = {
 }
 
 module.exports = {
+  stats: {
+    children: false,
+    entrypoints: false
+  },
   mode: process.env.NODE_ENV,
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '../web')
+      '@': paths.appSrc
     },
     extensions: paths.moduleFileExtensions
       .map(ext => `.${ext}`)

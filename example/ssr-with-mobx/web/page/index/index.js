@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import './index.less'
 import { inject, observer } from 'mobx-react'
+import './index.less'
 
 function Page (props) {
   return (
@@ -9,8 +9,8 @@ function Page (props) {
       <div className='welcome' />
       <ul className='list'>
         {
-          props.news && props.news.map((item, index) => (
-            <li key={`news${index}`}>
+          props.news && props.news.map(item => (
+            <li key={item.id}>
               <div>文章标题: {item.title}</div>
               <div className='toDetail'><Link to={`/news/${item.id}`}>点击查看详情</Link></div>
             </li>
@@ -21,12 +21,12 @@ function Page (props) {
   )
 }
 
-Page.getInitialProps = async ({ store }) => {
-  await store.pageStore.getData()
-}
-
 const mapStateToProps = ({ store }) => ({
   news: store.pageStore.news
 })
+
+Page.getInitialProps = async ({ store }) => {
+  return store.pageStore.getData()
+}
 
 export default inject(mapStateToProps)(observer(Page))

@@ -45,14 +45,20 @@ module.exports = {
                 'getInitialProps',
                 'hydrate',
                 'stream',
+                'ssr-csr',
                 'hmr',
                 'optimize',
+                'dev',
                 'publish',
+                'deploy',
+                'loadable',
                 'ts',
                 'serverless',
+                'thinking',
                 'faq'
+                // 'update'
               ],
-            },
+            }
           ]
         }
       },

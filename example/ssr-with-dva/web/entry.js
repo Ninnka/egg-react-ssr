@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import dva from 'dva'
-import models from './models'
 import { BrowserRouter, StaticRouter, Route, Switch } from 'react-router-dom'
-import defaultLayout from '@/layout'
 import { getWrappedComponent, getComponent } from 'ykfe-utils'
-import { routes as Routes } from '../config/config.default'
 import { createMemoryHistory, createBrowserHistory } from 'history'
+import { routes as Routes } from '../config/config.ssr'
+import defaultLayout from '@/layout'
+import models from './models'
 
 const initDva = (options) => {
   const app = dva(options)
@@ -18,9 +18,10 @@ const initDva = (options) => {
 
 const clientRender = () => {
   const initialState = window.__INITIAL_DATA__ || {}
+  const history = createBrowserHistory()
   const app = initDva({
     initialState,
-    history: createBrowserHistory()
+    history: history
   })
   const store = app._store
 
@@ -28,13 +29,11 @@ const clientRender = () => {
     <BrowserRouter>
       <Switch>
         {
-          Routes.map(({ path, exact, Component }, key) => {
+          Routes.map(({ path, exact, Component }) => {
             const ActiveComponent = Component()
             const Layout = ActiveComponent.Layout || defaultLayout
-            return <Route exact={exact} key={key} path={path} render={() => {
-              const WrappedComponent = getWrappedComponent(ActiveComponent)
-              return <Layout><WrappedComponent store={store} /></Layout>
-            }} />
+            const WrappedComponent = getWrappedComponent(ActiveComponent)
+            return <Route exact={exact} key={path} path={path} render={() => <Layout><WrappedComponent store={store} /></Layout>} />
           })
         }
       </Switch>
@@ -65,7 +64,7 @@ const serverRender = async ctx => {
 
   app.router(() => (
     <StaticRouter location={ctx.req.url} context={storeState}>
-      <Layout>
+      <Layout layoutData={ctx}>
         <ActiveComponent {...storeState} />
       </Layout>
     </StaticRouter>

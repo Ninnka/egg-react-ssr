@@ -1,8 +1,8 @@
-import { processError } from './util/index'
-import { Optional } from './interface/option'
 import inquirer from 'inquirer'
 import fs from 'fs'
 import shell from 'shelljs'
+import { processError } from './util/index'
+import { Optional } from './interface/option'
 
 /**
  * 应用初始化函数
@@ -26,6 +26,7 @@ export function checkRepeat (option: Optional): Promise<void> {
         console.log(`原文件已经成功删除...`)
         resolve()
       } else process.exit()
-    } else resolve()
-  }).catch(err => processError(err))
+    }
+    resolve()
+  })
 }

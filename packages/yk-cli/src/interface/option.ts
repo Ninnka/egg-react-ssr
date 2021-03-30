@@ -9,7 +9,7 @@ export interface Optional {
   tool?: string
 
     /** 应用名称 */
-  appName?: string
+  appName: string
 
     /** 样式预处理 */
   style?: 'less' | 'sass' | 'css'
@@ -18,5 +18,5 @@ export interface Optional {
   store?: string
 
     /** 项目语言 */
-  language?: 'typescript' | 'javascript'
+  language: 'typescript' | 'javascript'
 }

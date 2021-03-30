@@ -1,53 +1,42 @@
 {
   "name": "yk-cli",
-  "version": "1.0.16",
+  "version": "3.1.1",
   "description": "ykcli for ssr",
-  "main": "./bin/index.js",
-  "types": "types/index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./es/index.js",
+  "sideEffects": false,
   "scripts": {
-    "lint": "tslint -c tslint.json -p .",
-    "lint:fix": "tslint -c tslint.json -p . --fix",
-    "build": "rm -rf ./bin && tsc --project ./tsconfig.json --sourceMap false",
-    "start": "node --inspect=19229 ./bin/index.js",
-    "dev": "rm -rf ./bin && tsc -w"
+    "build": "concurrently \"tsc -p ./tsconfig.cjs.json --sourceMap false\" \" tsc -p ./tsconfig.es6.json --sourceMap false\"",
+    "watch": "concurrently \"tsc -w -p ./tsconfig.cjs.json \" \"tsc -w -p ./tsconfig.es6.json \""
   },
   "bin": {
-    "ykcli": "./bin/index.js"
+    "ykcli": "./lib/cli.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ykfe/yk-cli.git"
   },
-  "standard": {
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint/eslint-plugin"
-    ]
-  },
-  "pre-commit": [
-    "lint:fix"
-  ],
   "dependencies": {
     "download-git-repo": "^2.0.0",
     "inquirer": "6.3.1",
-    "nunjucks": "^3.2.0",
     "ora": "^3.4.0",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
     "shelljs": "^0.8.3",
     "yargs": "^13.2.4"
   },
   "devDependencies": {
     "@types/inquirer": "^6.0.3",
-    "@types/nunjucks": "^3.1.1",
     "@types/shelljs": "^0.8.5",
+    "@types/webpack": "^4.39.3",
+    "@types/webpack-dev-server": "^3.10.0",
     "@types/yargs": "^13.0.0",
-    "pre-commit": "^1.2.2",
-    "tslint": "^5.17.0",
-    "tslint-config-standard": "^8.0.1",
-    "typescript": "^3.5.2"
+    "concurrently": "^5.0.0",
+    "webpack": "^4.41.5",
+    "webpack-dev-server": "^3.7.2"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/ykfe/yk-cli/issues"
   },

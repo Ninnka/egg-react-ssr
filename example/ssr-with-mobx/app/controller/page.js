@@ -1,6 +1,7 @@
 
 const Controller = require('egg').Controller
-const { renderToStream } = require('ykfe-utils')
+const renderToStream = require('ykfe-utils/lib/renderToStream')
+const ssrConfig = require('../../config/config.ssr')
 
 class PageController extends Controller {
   async index () {
@@ -9,10 +10,12 @@ class PageController extends Controller {
       // Page为webpack打包的chunkName，项目默认的entry为Page
       ctx.type = 'text/html'
       ctx.status = 200
-      const stream = await renderToStream(ctx, 'Page', ctx.app.config)
+      Object.assign(ctx.app.config, ssrConfig)
+      const stream = await renderToStream(ctx, ctx.app.config)
+      ctx.res.write('<!DOCTYPE html>')
       ctx.body = stream
     } catch (error) {
-      ctx.logger.error(`Page Controller renderToStream Error ${error}`)
+      ctx.logger.error(`Page Controller renderToStream Error`, error)
     }
   }
 }
